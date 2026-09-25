@@ -1,3 +1,4 @@
+```python
 import os
 import re
 import discord
@@ -39,6 +40,23 @@ def get_user_id(title):
         return match.group(0)
 
     return None
+
+
+def get_ban_duration(ban_count):
+    if ban_count <= 1:
+        return "3d"
+
+    elif ban_count == 2:
+        return "7d"
+
+    elif ban_count == 3:
+        return "10d"
+
+    elif ban_count == 4:
+        return "15d"
+
+    else:
+        return "20d"
 
 
 @bot.event
@@ -108,13 +126,11 @@ async def bl(ctx):
 
     # Create suggestion from the forum title
     if reason in MUTE_REASONS:
-        suggestion = f"*mute {current_user_id} {reason}"
-
-    elif reason == "doxxing" or reason == "doxing":
-        suggestion = f"*ban {current_user_id} perm doxxing"
+        suggestion = f"/mute {current_user_id} {reason}"
 
     else:
-        suggestion = f"*ban {current_user_id} perm {reason}"
+        duration = get_ban_duration(ban_count)
+        suggestion = f"/ban {current_user_id} {duration} {reason}"
 
     embed = discord.Embed(
         title="Ban Log",
@@ -141,3 +157,4 @@ async def bl(ctx):
 
 
 bot.run(TOKEN)
+```
