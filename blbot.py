@@ -1,4 +1,3 @@
-```python
 import os
 import re
 import discord
@@ -45,16 +44,12 @@ def get_user_id(title):
 def get_ban_duration(ban_count):
     if ban_count <= 1:
         return "3d"
-
     elif ban_count == 2:
         return "7d"
-
     elif ban_count == 3:
         return "10d"
-
     elif ban_count == 4:
         return "15d"
-
     else:
         return "20d"
 
@@ -157,4 +152,3 @@ async def bl(ctx):
 
 
 bot.run(TOKEN)
-```
