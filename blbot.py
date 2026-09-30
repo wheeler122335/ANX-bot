@@ -631,13 +631,10 @@ async def bl(ctx):
     recommendation = (
         f"/ban {user_id} {duration} {reason}"
     )
-    recommendation_lines = [
-        f"/ban user:{user_id} duration:{duration}",
-        f"reason:{reason}",
-        "If you believe you were falsely banned,",
-        "you may use the [ban appeal server]",
-        "(https://discord.gg/WhcZwpBwPF)",
-    ]
+    recommendation = (
+        f"/ban user:{user_id} duration:{duration}\n"
+        f"reason:{reason}"
+    )
 
     # --------------------------------------------------------
     # EMBED
@@ -709,8 +706,8 @@ async def bl(ctx):
         inline=False
     )
     embed.add_field(
-        name="Ban Recommendation:",
-        value="\n".join(f"`{line}`" for line in recommendation_lines),
+        name="\u200b",
+        value=f"```\n{recommendation}\n```",
         inline=False
     )
 
@@ -730,6 +727,7 @@ async def bl(ctx):
         user_id,
         duration
     )
+    await ctx.send(embed=embed)
 
     await ctx.send(
         embed=embed,
