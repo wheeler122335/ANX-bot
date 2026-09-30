@@ -13,6 +13,7 @@ from discord.ext import commands
 # ============================================================
 
 TOKEN = os.getenv("DISCORD_TOKEN")
+
 DATABASE_FILE = "anx_bans.db"
 
 
@@ -61,19 +62,12 @@ db.commit()
 # ============================================================
 
 def get_ban_duration(previous_bans):
-
-    if previous_bans <= 1:
+    if previous_bans <= 0:
         return "3d"
-
-    if previous_bans == 2:
+    if previous_bans == 1:
         return "7d"
-
-    if previous_bans == 3:
+    if previous_bans == 2:
         return "10d"
-
-    if previous_bans == 4:
-        return "15d"
-
     return "20d"
 
 
@@ -200,7 +194,7 @@ def can_moderate(member):
 
 
 # ============================================================
-# BAN DECISION VIEW
+# BAN DECISION BUTTONS
 # ============================================================
 
 class BanDecisionView(discord.ui.View):
@@ -235,12 +229,12 @@ class BanDecisionView(discord.ui.View):
         label="Ban",
         emoji="🔨",
         style=discord.ButtonStyle.danger,
-        custom_id="anx_ban_button"
+        custom_id="anx_ban"
     )
     async def ban_button(
         self,
-        interaction: discord.Interaction,
-        button: discord.ui.Button
+        interaction,
+        button
     ):
 
         if self.decided:
@@ -388,12 +382,12 @@ class BanDecisionView(discord.ui.View):
         label="Reject",
         emoji="❌",
         style=discord.ButtonStyle.secondary,
-        custom_id="anx_reject_button"
+        custom_id="anx_reject"
     )
     async def reject_button(
         self,
-        interaction: discord.Interaction,
-        button: discord.ui.Button
+        interaction,
+        button
     ):
 
         if self.decided:
@@ -501,7 +495,6 @@ async def wait_for_unban(
             pass
 
         except discord.Forbidden:
-
             print(
                 f"Could not unban {user_id}: "
                 "missing permission."
@@ -515,7 +508,7 @@ async def wait_for_unban(
 
 
 # ============================================================
-# RELOAD TEMPORARY BANS
+# RELOAD BANS AFTER RESTART
 # ============================================================
 
 async def reload_temporary_bans():
@@ -627,6 +620,10 @@ async def bl(ctx):
 
         return
 
+    # --------------------------------------------------------
+    # RECOMMENDED DURATION
+    # --------------------------------------------------------
+
     duration = get_ban_duration(
         stats["all_time"]
     )
@@ -654,6 +651,12 @@ async def bl(ctx):
             stats["all_time"]
         ),
         inline=False
+    embed.add_field(
+        name="Number of bans (all time):",
+        value=str(
+            stats["all_time"]
+        ),
+        inline=True
     )
 
     if stats["most_recent"]:
@@ -666,11 +669,16 @@ async def bl(ctx):
     else:
 
         recent = "None"
+        recent = "N/A"
 
     embed.add_field(
         name="Most recent ban:",
         value=recent,
         inline=False
+    embed.add_field(
+        name="Most recent ban:",
+        value=recent,
+        inline=True
     )
 
     embed.add_field(
@@ -678,6 +686,10 @@ async def bl(ctx):
         value=str(
             stats["month"]
         ),
+        inline=False
+    embed.add_field(
+        name="Number of bans (past month):",
+        value=str(stats["month"]) if stats["month"] else "N/A",
         inline=False
     )
 
@@ -687,6 +699,10 @@ async def bl(ctx):
             stats["three_months"]
         ),
         inline=False
+    embed.add_field(
+        name="Number of bans (past 3 months):",
+        value=str(stats["three_months"]) if stats["three_months"] else "N/A",
+        inline=True
     )
 
     embed.add_field(
@@ -695,13 +711,17 @@ async def bl(ctx):
             stats["year"]
         ),
         inline=False
+    embed.add_field(
+        name="Number of bans (past year):",
+        value=str(stats["year"]) if stats["year"] else "N/A",
+        inline=True
     )
 
     embed.add_field(
         name="Ban Recommendation:",
         value=(
-            f"```text\n"
-            f"{recommendation}\n"
+            f"```"
+            f"{recommendation}"
             f"```"
         ),
         inline=False
