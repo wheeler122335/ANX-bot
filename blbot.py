@@ -631,6 +631,13 @@ async def bl(ctx):
     recommendation = (
         f"/ban {user_id} {duration} {reason}"
     )
+    recommendation_lines = [
+        f"/ban user:{user_id} duration:{duration}",
+        f"reason:{reason}",
+        "If you believe you were falsely banned,",
+        "you may use the [ban appeal server]",
+        "(https://discord.gg/WhcZwpBwPF)",
+    ]
 
     # --------------------------------------------------------
     # EMBED
@@ -642,6 +649,10 @@ async def bl(ctx):
             f"<@{user_id}> "
             f"({user_id})"
         ),
+        color=discord.Color.red()
+    )
+    embed = discord.Embed(
+        description=f"Ban Logs for <@{user_id}> ({user_id}):",
         color=discord.Color.red()
     )
 
@@ -697,6 +708,13 @@ async def bl(ctx):
         ),
         inline=False
     )
+    embed.add_field(
+        name="Ban Recommendation:",
+        value="\n".join(f"`{line}`" for line in recommendation_lines),
+        inline=False
+    )
+
+    embed.timestamp = discord.utils.utcnow()
 
     embed.set_footer(
         text=f"Requested by {ctx.author}"
