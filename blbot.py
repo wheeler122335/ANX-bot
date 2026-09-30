@@ -650,12 +650,6 @@ async def bl(ctx):
         value=str(
             stats["all_time"]
         ),
-        inline=False
-    embed.add_field(
-        name="Number of bans (all time):",
-        value=str(
-            stats["all_time"]
-        ),
         inline=True
     )
 
@@ -668,25 +662,14 @@ async def bl(ctx):
 
     else:
 
-        recent = "None"
         recent = "N/A"
 
-    embed.add_field(
-        name="Most recent ban:",
-        value=recent,
-        inline=False
     embed.add_field(
         name="Most recent ban:",
         value=recent,
         inline=True
     )
 
-    embed.add_field(
-        name="Number of bans (past month):",
-        value=str(
-            stats["month"]
-        ),
-        inline=False
     embed.add_field(
         name="Number of bans (past month):",
         value=str(stats["month"]) if stats["month"] else "N/A",
@@ -695,22 +678,10 @@ async def bl(ctx):
 
     embed.add_field(
         name="Number of bans (past 3 months):",
-        value=str(
-            stats["three_months"]
-        ),
-        inline=False
-    embed.add_field(
-        name="Number of bans (past 3 months):",
         value=str(stats["three_months"]) if stats["three_months"] else "N/A",
         inline=True
     )
 
-    embed.add_field(
-        name="Number of bans (past year):",
-        value=str(
-            stats["year"]
-        ),
-        inline=False
     embed.add_field(
         name="Number of bans (past year):",
         value=str(stats["year"]) if stats["year"] else "N/A",
